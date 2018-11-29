@@ -10,8 +10,6 @@ Optional
 ------------
 
 - **-app "&lt;title&gt;"** — overrides the default project title ("PacMon")
-- **-java &lt;path&gt;** — defines the full path to the Java executable — it is highly recommended that you use TeamCity's pre-defined environment variable: *%env.JAVA_EXE%*
-- **-opts "&lt;options&gt;"** — passes optional parameters to Java
 - **-dc &lt;relpath&gt;** — overrides the default relative path to the Dependency Check folder (.\dc)
 - **-etc "&lt;options&gt;"** — passes optional parameters to Dependency Check
   - **-etc "-n"** — Disables the automatic updating of the CPE data
