@@ -37,9 +37,9 @@ Param(
 [string]$xmlFilename = $x
 [string]$htmlFilename = $h
 
-
 ### END INIT PARAMS
 
+# Build args that send to OWASP Dependency Check CLI
 function Get-DependencyCheckArgs([string]$projectName, [string]$inputFilePath, [string]$outputFilePath, [string]$suppressionFilePath, [string]$additionalArgs){
 	$format = Get-FileExtensionFromPath $outputFilePath
 	[string]$dcArgs = '--project "{0}" -s "{1}" -o "{2}" -f "{3}"' -f $projectName, $inputFilePath, $outputFilePath, $format
@@ -55,12 +55,14 @@ function Get-DependencyCheckArgs([string]$projectName, [string]$inputFilePath, [
 	$dcArgs
 }
 
+# Run the dependency-check.bat file
 function Run-DependencyCheck([string]$dcPath, [string]$cmdLineArgs){
 	$command = '{0}/bin/dependency-check.bat {1}' -f $dcPath, $cmdLineArgs
 	Write-Output ("Executing: cmd.exe /C {0}" -f $command)
 	& cmd.exe /C $command
 }
 
+# Parse output and return the check results
 function Validate-Dependencies([string]$xmlPath) {
 	if (!(Test-Path $xmlPath)) {
 		Write-Error ("XML output not found: {0}" -f $xmlPath)
@@ -84,6 +86,7 @@ function Validate-Dependencies([string]$xmlPath) {
 	$xml.analysis.dependencies.dependency
 }
 
+# Parse and write the check results to console
 function Parse-Dependencies($dependencies) {
 	Foreach ($dependency IN $dependencies) {
 		Parse-Dependency($dependency)
@@ -212,6 +215,15 @@ function Set-PSConsole {
 [string]$xmlPath = $xmlFilename
 [string]$htmlPath = $htmlFilename
 [string]$suppressPath = $suppressFilename
+[boolean]$deleteSuppressFile = $false
+
+# Download suppress file if $suppressFilename is a URL
+If ($suppressFilename.StartsWith("http")) {
+    $suppressPath = [System.IO.Path]::GetTempFileName()
+    [boolean]$deleteSuppressFile = $true
+    Write-Output ("Download the suppress file and save to {0}" -f $suppressPath)
+    Invoke-WebRequest -Uri $suppressFilename -OutFile $suppressPath
+}
 
 $scanArgs = Get-DependencyCheckArgs $app $inputPath $xmlPath $suppressPath
 
@@ -229,6 +241,10 @@ if (Has-Vulnerability $dependencies) {
 	Write-Output ("Vulnerability found -- generating report artifact: {0}" -f $htmlFilename)
 	[string]$artifactArgs = Get-DependencyCheckArgs $app $inputPath $htmlPath $suppressPath $etc
 	Run-DependencyCheck $dcPath $artifactArgs
+}
+
+if ($deleteSuppressFile -eq $true){
+    Delete-File $suppressPath
 }
 
 exit(0)

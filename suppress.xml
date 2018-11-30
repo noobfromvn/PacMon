@@ -14,4 +14,18 @@
 		<sha1>041DCCAF76E8441E735CC078F93F1F3B0003D94E</sha1>
 		<cve>CVE-2008-0333</cve>
 	</suppress>
+	<suppress>
+	   <notes><![CDATA[
+	   file name: System.Security.AccessControl.dll
+	   ]]></notes>
+	   <sha1>ab1897bc44dc91f8d5c1e37a8c342fa3ce2fcc9a</sha1>
+	   <cve>CVE-2007-6357</cve>
+	</suppress>
+	<suppress>
+	   <notes><![CDATA[
+	   file name: jQuery.2.1.3.nupkg
+	   ]]></notes>
+	   <sha1>8c5339ce4d9594d974ef417a2a679fd83d3d7f29</sha1>
+	   <cpe>cpe:/a:jquery:jquery</cpe>
+	</suppress>
 </suppressions>
