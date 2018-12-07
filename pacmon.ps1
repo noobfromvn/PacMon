@@ -57,7 +57,7 @@ function Get-DependencyCheckArgs([string]$projectName, [string]$inputFilePath, [
 
 # Run the dependency-check.bat file
 function Run-DependencyCheck([string]$dcPath, [string]$cmdLineArgs){
-	$command = '{0}/bin/dependency-check.bat {1}' -f $dcPath, $cmdLineArgs
+	$command = '{0}\bin\dependency-check.bat {1}' -f $dcPath, $cmdLineArgs
 	Write-Output ("Executing: cmd.exe /C {0}" -f $command)
 	& cmd.exe /C $command
 }
